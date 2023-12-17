@@ -1,5 +1,6 @@
 <?php
-include 'src/load.php';
+include 'src/classIncludes/Session.class.php';
+include 'src/classIncludes/User.class.php';
 $validation = false;
 
 $userName = $_POST['userName'];
@@ -37,13 +38,14 @@ $password = $_POST['password'];
 
   if($validation){
     User::updateCredentials($userName, $emailAddress, $mobileNumber, $password);
+    
   }
 ?>
 <!doctype html>
 
 <html lang="en" data-bs-theme="auto">
 
-<?php session::renderPage("_signup")?>
+<?php Session::renderPage("_signup")?>
 
 <body class="d-flex align-items-center py-4 sign-in">
 
