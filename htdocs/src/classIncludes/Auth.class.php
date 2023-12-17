@@ -1,5 +1,7 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/Database.class.php";
+// include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/Database.class.php";
+// include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/User.class.php";
+// include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/Session.class.php";
 class Auth{
     public $id;
     public $ip;
@@ -11,14 +13,17 @@ class Auth{
 
     public static function authenticate($emailAddress, $password, $fingerprint = NULL){
         // setting fingerprint from cookie
+        echo "authentication page";
         $login = false;
         if($fingerprint == NULL){
             echo"fingerprint doesn't exists";
             $fingerprint = $_COOKIE['fingerprint'];
         }
         User::login($emailAddress, $password);
+        echo "after lgin";
         if($login == true){
             // getting database connection
+            echo "start";
             $conn = Database::getconnection();
             $ip = $_SERVER["REMOTE_ADDR"];
             $browser = $_SERVER["HTTP_USER_AGENT"];

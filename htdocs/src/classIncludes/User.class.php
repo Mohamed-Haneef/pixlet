@@ -25,15 +25,18 @@ class User{
 
     }
 
-    public static function login($userName, $password){
+    public static function login($emailAddress, $password){
         try {
-            $query = "SELECT * FROM `userinfo` WHERE `userName` = '$userName'";
+            $query = "SELECT * FROM `userinfo` WHERE `emailAddress` = '$emailAddress'";
             $conn = Database::getConnection();
             $result = $conn->query($query);
             print("something is wrong with database");
             
             if($result) {
                 $row = $result->fetch_assoc();
+                if($row) {
+                    echo "data fetched";
+                }
                 print($row["password"]);
                 print($password);
 
@@ -44,7 +47,7 @@ class User{
                     throw new Exception("Password didn't match buddy");
                 }
             } else {
-                throw new Exception("Username didn't match dude");
+                throw new Exception("Email didn't match dude");
             }
             return $login;
         } catch (Exception $e) {

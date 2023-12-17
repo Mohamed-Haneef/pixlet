@@ -1,12 +1,14 @@
 <?php
 include 'src/classIncludes/Session.class.php';
 include 'src/classIncludes/User.class.php';
+include 'src/classIncludes/Auth.class.php';
 
-if (isset($_POST['userName']) && isset($_POST['password'])) 
+if (isset($_POST['emailAddress']) && isset($_POST['password'])) 
 {
   $login = false;
-  $email_address = $_POST['emailAddress'];
+  $emailAddress = $_POST['emailAddress'];
   $password = $_POST['password'];
+  echo "login page";
   $redirect= Auth::authenticate($emailAddress, $password);//Returns login as true
 
 }
