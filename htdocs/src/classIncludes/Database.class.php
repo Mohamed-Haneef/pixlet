@@ -50,6 +50,7 @@ class Database
             self::$conn -> close();
             //Close the connection and set the value to null...
             self::$conn = null;
+            return self::$conn;
         }
     }
 

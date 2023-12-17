@@ -4,6 +4,6 @@
 //     include $class;
 // }
 
-// include 'classIncludes/Session.class.php';
-// include 'classIncludes/Database.class.php';
-// include 'classIncludes/User.class.php';
+//  include_once 'classIncludes/Session.class.php';
+//  include_once 'classIncludes/Database.class.php';
+//  include_once 'classIncludes/User.class.php';

@@ -38,8 +38,7 @@ $password = $_POST['password'];
 
   if($validation){
     User::updateCredentials($userName, $emailAddress, $mobileNumber, $password);
-    
-  }
+    }
 ?>
 <!doctype html>
 
