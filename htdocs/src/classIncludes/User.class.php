@@ -2,6 +2,24 @@
 include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/Database.class.php";
 
 class User{
+    public $id;
+    public $user;
+    public $conn;
+    public function __construct($email)
+    {
+        $conn = Database::getConnection();
+        $this->conn = $conn;
+        $sql_user = "SELECT `id` FROM `userinfo` WHERE `emailAddress` = '$email'";
+        $result = $conn->query($sql_user);
+        if($result->num_rows){
+            $userId = $result->fetch_assoc();
+             $this->id = $userId["id"];
+        }else{
+            throw new exception("username doesn't exists");
+        }
+        
+
+    }
     public static function updateCredentials($userName, $emailAddress, $mobileNumber, $password){
         
         // Getting database connection
@@ -25,7 +43,7 @@ class User{
 
     }
 
-    public static function login($emailAddress, $password){
+    public static function login($emailAddress, $password) : bool{
         try {
             $query = "SELECT * FROM `userinfo` WHERE `emailAddress` = '$emailAddress'";
             $conn = Database::getConnection();
@@ -41,15 +59,15 @@ class User{
                 print($password);
 
                 if (password_verify($password, $row["password"])) {
-                    $login=true;
-                    echo"success";
+                    echo "password matches";
+                    return $row["id"];
                 } else {
                     throw new Exception("Password didn't match buddy");
                 }
             } else {
                 throw new Exception("Email didn't match dude");
             }
-            return $login;
+            
         } catch (Exception $e) {
             // Log the exception for debugging purposes
             error_log("Exception in User::login: " . $e->getMessage());

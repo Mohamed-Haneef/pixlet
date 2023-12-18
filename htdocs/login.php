@@ -16,7 +16,7 @@ if (isset($_POST['emailAddress']) && isset($_POST['password']))
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 
-  <?php Session::renderPage("_login")?>
+  <?php Session::renderPage("_head")?>
   
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">

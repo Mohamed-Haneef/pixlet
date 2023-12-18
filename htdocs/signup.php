@@ -7,10 +7,9 @@ $userName = $_POST['userName'];
 $emailAddress = $_POST['emailAddress'];
 $mobileNumber = $_POST['mobileNumber'];
 $password = $_POST['password'];
-  //checking whether the required details are given
-  if(isset($userName) && isset($emailAddress) && isset($mobileNumber) && isset($password))
-  {
-  // credentials validation before uploading into database
+//checking whether the required details are given
+if (isset($userName) && isset($emailAddress) && isset($mobileNumber) && isset($password)) {
+    // credentials validation before uploading into database
 
     /* 
     Validation Info:
@@ -24,27 +23,24 @@ $password = $_POST['password'];
         # from 0-9
      }
     */
-    if(preg_match('/^[a-zA-Z][0-9a-zA-Z_]{2,23}[0-9a-zA-Z]$/', $userName))
-    {
-        if(filter_var($emailAddress, FILTER_VALIDATE_EMAIL))
-        {
-            if(preg_match('/^[0-9]{10}+$/', $mobileNumber))
-            {
+    if (preg_match('/^[a-zA-Z][0-9a-zA-Z_]{2,23}[0-9a-zA-Z]$/', $userName)) {
+        if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
+            if (preg_match('/^[0-9]{10}+$/', $mobileNumber)) {
                 $validation = true;
             }
         }
     }
-  }
+}
 
-  if($validation){
+if ($validation) {
     User::updateCredentials($userName, $emailAddress, $mobileNumber, $password);
-    }
+}
 ?>
 <!doctype html>
 
 <html lang="en" data-bs-theme="auto">
 
-<?php Session::renderPage("_signup")?>
+<?php Session::renderPage("_head") ?>
 
 <body class="d-flex align-items-center py-4 sign-in">
 
