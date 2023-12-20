@@ -1,6 +1,8 @@
 <?php
-
-class Session{
+class Session
+{
+    public static $user = null;
+    public static $userSession = null;
 
     // Creates session
     public static function start()
@@ -35,9 +37,9 @@ class Session{
     //getting a key from session
     public static function get($key, $default = false)
     {
-        if(session::isSet($key)){
+        if(session::isSet($key)) {
             return $_SESSION[$key];
-        }else{
+        } else {
             return $default;
         }
     }

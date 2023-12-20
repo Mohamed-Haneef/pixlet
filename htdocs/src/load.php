@@ -1,9 +1,13 @@
 <?php
 
-// foreach(glob("classIncludes/*.class.php") as $class){
-//     include $class;
-// }
+spl_autoload_register('autoLoad');
 
-//  include_once 'classIncludes/Session.class.php';
-//  include_once 'classIncludes/Database.class.php';
-//  include_once 'classIncludes/User.class.php';
+function autoLoad($className)
+{
+    include_once $_SERVER['DOCUMENT_ROOT']."/src/classIncludes/$className.class.php";
+}
+
+?>
+<pre>
+    <?echo $_SERVER['DOCUMENT_ROOT']?>
+</pre>

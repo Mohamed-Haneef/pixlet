@@ -1,9 +1,5 @@
 <?php
-use Monolog\Handler\FingersCrossedHandler;
-
-// include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/Database.class.php";
-// include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/User.class.php";
-// include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/Session.class.php";
+// include("Database.class.php");
 class Auth
 {
     public $id;
@@ -14,6 +10,7 @@ class Auth
     public $conn;
     public $fingerprint;
     public $browser;
+    public $user;
 
     public function __construct($token)
     {
@@ -31,16 +28,17 @@ class Auth
         }
     }
 
-    public static function authenticate($emailAddress, $password, $fingerprint = NULL)
+    public static function authenticate($emailAddress, $password, $fingerprint = null)
     {
         // setting fingerprint from cookie
         echo "authentication page";
         $authenticated = false;
-        if ($fingerprint == NULL) {
+        if ($fingerprint == null) {
             echo "fingerprint doesn't exists";
             $fingerprint = $_COOKIE['fingerprint'];
         }
         $userCred = new User($emailAddress);
+        var_dump($userCred);
         $authenticated = User::login($emailAddress, $password);
         echo "after lgin";
         if ($authenticated == true) {
@@ -57,9 +55,13 @@ class Auth
             $result = $conn->query($sql_query);
             echo "result became true";
             if ($result) {
+                Session::set("username", $userCred->user);
+                echo $_SESSION["username"];
+                Session::set("id", $userCred->id);
                 Session::set("session_token", $token);
                 Session::set("fingerprint", $fingerprint);
                 echo "session set";
+        
             }
         }
 
@@ -69,8 +71,9 @@ class Auth
     {
         try {
             $session = new Auth($token);
-            if($session->validateSession()){
-                Session::$user = Session::get("user");
+            if($session->validateSession()) {
+                Session::$user = Session::get("username");
+                return Session::$user;
             }
             
             
@@ -115,5 +118,6 @@ class Auth
             throw new Exception("fingerprint doesn't exist");
         }
     }
+
 
 }

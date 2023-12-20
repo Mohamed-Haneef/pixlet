@@ -1,26 +1,30 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT']. "/src/classIncludes/Database.class.php";
 
-class User{
+include 'Database.class.php';
+class User
+{
     public $id;
     public $user;
     public $conn;
+    public $info;
     public function __construct($email)
     {
         $conn = Database::getConnection();
         $this->conn = $conn;
-        $sql_user = "SELECT `id` FROM `userinfo` WHERE `emailAddress` = '$email'";
+        $sql_user = "SELECT `id`, `userName` FROM `userinfo` WHERE `emailAddress` = '$email'";
         $result = $conn->query($sql_user);
-        if($result->num_rows){
+        if($result->num_rows) {
             $userId = $result->fetch_assoc();
-             $this->id = $userId["id"];
-        }else{
+            $this->id = $userId["id"];
+            $this->user = $userId["userName"];
+        } else {
             throw new exception("username doesn't exists");
         }
         
 
     }
-    public static function updateCredentials($userName, $emailAddress, $mobileNumber, $password){
+    public static function updateCredentials($userName, $emailAddress, $mobileNumber, $password)
+    {
         
         // Getting database connection
         $conn = Database::getConnection();
@@ -32,18 +36,17 @@ class User{
         $sql_query = "INSERT INTO userinfo (`userName`, `emailAddress`, `mobileNumber`, `password`)
         VALUES ('$userName', '$emailAddress', '$mobileNumber', '$pass')";
 
-        if($conn->query($sql_query) === true)
-        {
+        if($conn->query($sql_query) === true) {
             echo"New record created successfully";
-        }else
-        {
+        } else {
             echo "Error". $conn->error;
         }
         $conn = Database::closeConnection();
 
     }
 
-    public static function login($emailAddress, $password) : bool{
+    public static function login($emailAddress, $password) : bool
+    {
         try {
             $query = "SELECT * FROM `userinfo` WHERE `emailAddress` = '$emailAddress'";
             $conn = Database::getConnection();
