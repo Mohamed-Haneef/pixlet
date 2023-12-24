@@ -1,5 +1,4 @@
 <?php
-
 include 'Database.class.php';
 class User
 {

@@ -1,3 +1,6 @@
+<pre>
 <?php
+print_r($_SERVER);
 
-include("src/load.php");
+?>
+</pre>

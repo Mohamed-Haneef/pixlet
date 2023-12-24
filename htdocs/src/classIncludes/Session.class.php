@@ -37,7 +37,7 @@ class Session
     //getting a key from session
     public static function get($key, $default = false)
     {
-        if(session::isSet($key)) {
+        if(Session::isSet($key)) {
             return $_SESSION[$key];
         } else {
             return $default;

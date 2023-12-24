@@ -1,7 +1,5 @@
 <?php
-include 'src/classIncludes/Session.class.php';
-include 'src/classIncludes/User.class.php';
-include 'src/classIncludes/Auth.class.php';
+include 'src/load.php';
 
 if (isset($_POST['emailAddress']) && isset($_POST['password'])) {
     $login = false;

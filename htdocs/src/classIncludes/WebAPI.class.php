@@ -1,6 +1,5 @@
 <?php
-include 'Session.class.php';
-include 'Auth.class.php';
+
 class WebAPI
 {
 

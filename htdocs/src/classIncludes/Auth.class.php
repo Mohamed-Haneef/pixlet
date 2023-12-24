@@ -17,12 +17,17 @@ class Auth
         $this->token = $token;
         $this->conn = Database::getconnection();
         $this->credential = null;
-        $query = "SELECT * FROM `session` WHERE `token` = '$token' LIMIT 1";
+        $query = "SELECT * FROM `session` WHERE `token` = '$token'";
         $result = $this->conn->query($query);
-        if ($result->num_rows) {
+        if ($result) {
             $row = $result->fetch_assoc();
+            echo "Data fetched";
             $this->credential = $row;
-            $this->id = $row["id"];
+            $this->ip = $row["ip"];
+            $this->browser = $row["browser"];
+            echo  $row["browser"];
+            echo $this->credential["fingerprint"];
+            var_dump($row);
         } else {
             echo "invalid session";
         }
@@ -71,16 +76,19 @@ class Auth
     {
         try {
             $session = new Auth($token);
+            echo "class created";
             if($session->validateSession()) {
                 Session::$user = Session::get("username");
                 return Session::$user;
+            } else {
+                echo "validate session failed \n";
             }
             
             
 
 
         } catch (Exception $e) {
-
+            echo "authorization fail \n";
         }
     }
 
@@ -88,12 +96,22 @@ class Auth
     {
         if (isset($_COOKIE['fingerprint']) && $this->credential["fingerprint"]) {
             if ($_COOKIE['fingerprint'] == $this->credential["fingerprint"]) {
+                echo "fingerprint matches \n <br>";
                 $login_time = DateTime::createFromFormat('Y-m-d H:i:s', $this->credential['login_time']);
+                // echo $login_time->getTimestamp();
                 if (3600 > time() - $login_time->getTimestamp()) {
+                    echo time() - $login_time->getTimestamp();
+                    echo "time is less than 10 min";
                     if (isset($_SERVER['REMOTE_ADDR']) && isset($this->ip)) {
                         if ($this->ip == $_SERVER['REMOTE_ADDR']) {
-                            if (isset($_SERVER['HTTP_AGENT']) && isset($this->browser)) {
-                                if ($this->browser == $_SERVER['HTTP_AGENT']) {
+                            echo "same ip <br>";
+                            if (isset($_SERVER['HTTP_USER_AGENT']) && isset($this->browser)) {
+                                echo "browser present <br>";
+                                echo $this->browser. "<br>";
+                                echo $_SERVER['HTTP_USER_AGENT']. "<br>";
+                             
+                                if ($this->browser == $_SERVER['HTTP_USER_AGENT']) {
+                                    echo "same browser";
                                     return true;
                                 } else {
                                     throw new Exception('browser is different');
