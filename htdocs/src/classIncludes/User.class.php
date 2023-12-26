@@ -12,13 +12,18 @@ class User
         $this->conn = $conn;
         $sql_user = "SELECT `id`, `userName` FROM `userinfo` WHERE `emailAddress` = '$email'";
         $result = $conn->query($sql_user);
-        if($result->num_rows) {
-            $userId = $result->fetch_assoc();
-            $this->id = $userId["id"];
-            $this->user = $userId["userName"];
-        } else {
-            throw new exception("username doesn't exists");
+        try {
+            if($result->num_rows) {
+                $userId = $result->fetch_assoc();
+                $this->id = $userId["id"];
+                $this->user = $userId["userName"];
+            } else {
+                throw new exception("username doesn't exists");
+            }
+        } catch (Exception $e) {
+            throw $e;
         }
+        
         
 
     }

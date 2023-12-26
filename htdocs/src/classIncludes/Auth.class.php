@@ -58,13 +58,14 @@ class Auth
             $sql_query = "INSERT INTO `session` (`uid`, `ip`, `browser`,`login_time`, `fingerprint`, `token`)
                           VALUES ('$userCred->id', '$ip', '$browser', now(), '$fingerprint', '$token')";
             $result = $conn->query($sql_query);
-            echo "result became true";
+            // echo "result became true";
             if ($result) {
                 Session::set("username", $userCred->user);
                 // echo $_SESSION["username"];
                 Session::set("id", $userCred->id);
                 Session::set("session_token", $token);
                 Session::set("fingerprint", $fingerprint);
+                return true;
                 // echo "session set";
         
             }
