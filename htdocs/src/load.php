@@ -6,8 +6,7 @@ function autoLoad($className)
 {
     include_once $_SERVER['DOCUMENT_ROOT']."/src/classIncludes/$className.class.php";
 }
-Session::start();
-?>
-<pre>
-    <?echo $_SERVER['DOCUMENT_ROOT']?>
-</pre>
+
+$WebAPI = new WebAPI();
+$session_authenticated = $WebAPI->initiatesession();
+// echo Session::$usersession;

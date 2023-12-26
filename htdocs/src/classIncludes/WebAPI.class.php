@@ -10,12 +10,13 @@ class WebAPI
             try {
                 Session::$userSession = Auth::authorize(Session::get('session_token'));
                 if(Session::$userSession) {
-                    echo"success";
+                    // echo"success";
+                    return Session::$userSession;
                 }
             } catch (Exception $e) {
                 
             }
         }
-        // $__base_path = get_config('base_path');
+        
     }
 }

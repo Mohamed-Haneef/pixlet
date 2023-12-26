@@ -50,18 +50,18 @@ class User
             $query = "SELECT * FROM `userinfo` WHERE `emailAddress` = '$emailAddress'";
             $conn = Database::getConnection();
             $result = $conn->query($query);
-            print("something is wrong with database");
+            // print("something is wrong with database");
             
             if($result) {
                 $row = $result->fetch_assoc();
                 if($row) {
-                    echo "data fetched";
+                    // echo "data fetched";
                 }
-                print($row["password"]);
-                print($password);
+                // print($row["password"]);
+                // print($password);
 
                 if (password_verify($password, $row["password"])) {
-                    echo "password matches";
+                    // echo "password matches";
                     return $row["id"];
                 } else {
                     throw new Exception("Password didn't match buddy");
