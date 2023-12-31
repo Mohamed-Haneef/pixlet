@@ -10,7 +10,6 @@ class WebAPI
             try {
                 Session::$userSession = Auth::authorize(Session::get('session_token'));
                 if(Session::$userSession) {
-                    // echo"success";
                     return Session::$userSession;
                 }
             } catch (Exception $e) {

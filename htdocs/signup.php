@@ -1,12 +1,18 @@
 <?php
-include 'src/classIncludes/Session.class.php';
-include 'src/classIncludes/User.class.php';
-$validation = false;
+include 'src/load.php';
 
-$userName = $_POST['userName'];
+// variable for validation
+$validation = false;  //complete validation
+$mobile_fail = false; // mobile number
+$name_fail = false;	  // username
+$email_fail = false;  // email id
+
+//User details
+$userName = htmlspecialchars($_POST['userName']);
 $emailAddress = $_POST['emailAddress'];
-$mobileNumber = $_POST['mobileNumber'];
-$password = $_POST['password'];
+$mobileNumber = htmlspecialchars($_POST['mobileNumber']);
+$password = htmlspecialchars($_POST['password']);
+
 //checking whether the required details are given
 if (isset($userName) && isset($emailAddress) && isset($mobileNumber) && isset($password)) {
     // credentials validation before uploading into database
@@ -23,19 +29,26 @@ if (isset($userName) && isset($emailAddress) && isset($mobileNumber) && isset($p
         # from 0-9
      }
     */
-    if (preg_match('/^[a-zA-Z][0-9a-zA-Z_]{2,23}[0-9a-zA-Z]$/', $userName)) {
+    if (preg_match('/^[a-zA-Z0-9\s]+$/', $userName)) {
         if (filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
             if (preg_match('/^[0-9]{10}+$/', $mobileNumber)) {
                 $validation = true;
+            } else {
+                $mobile_fail = true;
             }
+        } else {
+            $email_fail = true;
         }
+    } else {
+        $name_fail = true;
     }
 }
 
+// Update values into database if validation becomes true
 if ($validation) {
     
     User::updateCredentials($userName, $emailAddress, $mobileNumber, $password);
-    // return true;
+    // return true
     header('Location: /');
 }
 ?>
@@ -73,15 +86,27 @@ if ($validation) {
 					name="password">
 				<label for="floatingPassword">Password</label>
 			</div>
+			<?php
+            if($name_fail) {?>
 
-			<div class="form-check text-start my-3">
-				<input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-				<label class="form-check-label" for="flexCheckDefault">
-					Remember me
-				</label>
+			<div class="danger my-3">
+				<p><strong>Warning! :</strong> Name should not contain special characters</p>
 			</div>
-			<button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+			<?php }
+            if($mobile_fail) {?>
 
+			<div class="danger my-3">
+				<p><strong>Warning! : </strong>Name should not contain special characters</p>
+			</div>
+			<?php }
+            if($email_fail) {?>
+
+			<div class="danger my-3">
+				<p><strong>Warning! : </strong> Name should not contain special characters</p>
+			</div>
+			<?php }
+            ?>
+			<button class="btn btn-primary w-100 py-2 my-5" type="submit">Sign in</button>
 		</form>
 	</main>
 	<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>

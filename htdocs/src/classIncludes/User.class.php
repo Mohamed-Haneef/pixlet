@@ -10,22 +10,20 @@ class User
     {
         $conn = Database::getConnection();
         $this->conn = $conn;
-        $sql_user = "SELECT `id`, `userName` FROM `userinfo` WHERE `emailAddress` = '$email'";
-        $result = $conn->query($sql_user);
-        try {
-            if($result->num_rows) {
-                $userId = $result->fetch_assoc();
-                $this->id = $userId["id"];
-                $this->user = $userId["userName"];
-            } else {
-                throw new exception("username doesn't exists");
-            }
-        } catch (Exception $e) {
-            throw $e;
+        $sql_user = "SELECT `id`, `userName` FROM `userinfo` WHERE `emailAddress` = ?";
+        $bind = $conn -> prepare($sql_user);
+        $bind -> bind_param("s", $email);
+        $bind -> execute();
+        $result = $bind -> get_result();
+        if($result) {
+            $userId = $result->fetch_assoc();
+            $this->id = $userId["id"];
+            $this->user = $userId["userName"];
+            $conn = Database::closeConnection();
+            return $this->id;
+        } else {
+            return 5;
         }
-        
-        
-
     }
     public static function updateCredentials($userName, $emailAddress, $mobileNumber, $password)
     {
@@ -38,13 +36,19 @@ class User
         ];
         $pass = (password_hash("$password", PASSWORD_BCRYPT, $cost));
         $sql_query = "INSERT INTO userinfo (`userName`, `emailAddress`, `mobileNumber`, `password`)
-        VALUES ('$userName', '$emailAddress', '$mobileNumber', '$pass')";
+        VALUES (?, ?, ?, ?)";
 
-        if($conn->query($sql_query) === true) {
-            echo"New record created successfully";
+        $bind = $conn -> prepare($sql_query);
+        $bind -> bind_param("ssss", $userName, $emailAddress, $mobileNumber, $pass);
+
+
+
+        if ($bind->execute()) {
+            echo "New record created successfully";
         } else {
-            echo "Error". $conn->error;
+            echo "Error: " . $bind->error;
         }
+
         $conn = Database::closeConnection();
 
     }
@@ -52,26 +56,22 @@ class User
     public static function login($emailAddress, $password) : bool
     {
         try {
-            $query = "SELECT * FROM `userinfo` WHERE `emailAddress` = '$emailAddress'";
+            $query = "SELECT * FROM `userinfo` WHERE `emailAddress` = ?";
             $conn = Database::getConnection();
-            $result = $conn->query($query);
-            // print("something is wrong with database");
-            
+            $bind = $conn -> prepare($query);
+            $bind -> bind_param("s", $emailAddress);
+            $bind -> execute();
+            $result = $bind -> get_result();
             if($result) {
                 $row = $result->fetch_assoc();
-                if($row) {
-                    // echo "data fetched";
-                }
-                // print($row["password"]);
-                // print($password);
-
                 if (password_verify($password, $row["password"])) {
-                    // echo "password matches";
                     return $row["id"];
                 } else {
+                    return false;
                     throw new Exception("Password didn't match buddy");
                 }
             } else {
+                return false;
                 throw new Exception("Email didn't match dude");
             }
             

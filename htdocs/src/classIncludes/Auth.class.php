@@ -17,17 +17,17 @@ class Auth
         $this->token = $token;
         $this->conn = Database::getconnection();
         $this->credential = null;
-        $query = "SELECT * FROM `session` WHERE `token` = '$token'";
-        $result = $this->conn->query($query);
+        $query = "SELECT * FROM `session` WHERE `token` = ?";
+        $bind = $this->conn->prepare($query);
+        $bind -> bind_param("s", $token);
+        $bind -> execute();
+        $result = $bind -> get_result();
+        
         if ($result) {
             $row = $result->fetch_assoc();
-            // echo "Data fetched";
             $this->credential = $row;
             $this->ip = $row["ip"];
             $this->browser = $row["browser"];
-        // echo  $row["browser"];
-        // echo $this->credential["fingerprint"];
-        // var_dump($row);
         } else {
             echo "invalid session";
         }
@@ -35,40 +35,54 @@ class Auth
 
     public static function authenticate($emailAddress, $password, $fingerprint = null)
     {
-        // setting fingerprint from cookie
-        // echo "authentication page";
         $authenticated = false;
         if ($fingerprint == null) {
-            // echo "fingerprint doesn't exists";
+
+            // obtains fingerprint from cookie
             $fingerprint = $_COOKIE['fingerprint'];
-        }
-        $userCred = new User($emailAddress);
-        // var_dump($userCred);
-        $authenticated = User::login($emailAddress, $password);
-        // echo "after lgin";
-        if ($authenticated == true) {
-            // getting database connection
-            echo "start";
-            $conn = Database::getconnection();
-            Session::start();
-            $ip = $_SERVER["REMOTE_ADDR"];
-            $browser = $_SERVER["HTTP_USER_AGENT"];
-            $token = md5(rand(0, 99999) . $ip . $browser . $fingerprint);
-            // echo "token generated";
-            $sql_query = "INSERT INTO `session` (`uid`, `ip`, `browser`,`login_time`, `fingerprint`, `token`)
-                          VALUES ('$userCred->id', '$ip', '$browser', now(), '$fingerprint', '$token')";
-            $result = $conn->query($sql_query);
-            // echo "result became true";
-            if ($result) {
-                Session::set("username", $userCred->user);
-                // echo $_SESSION["username"];
-                Session::set("id", $userCred->id);
-                Session::set("session_token", $token);
-                Session::set("fingerprint", $fingerprint);
-                return true;
-                // echo "session set";
+            $userCred = new User($emailAddress);
+            if(isset($userCred->id)) {
+                if($authenticated = User::login($emailAddress, $password)) {
+                    if ($authenticated == true) {
+
+                        // If Login is success then add session token into variables
+                        $conn = Database::getconnection();
+                        Session::start();
+                        $ip = $_SERVER["REMOTE_ADDR"];
+                        $browser = $_SERVER["HTTP_USER_AGENT"];
+                        $token = md5(rand(0, 99999) . $ip . $browser . $fingerprint);
+                        $sql_query = "INSERT INTO `session` (`uid`, `ip`, `browser`, `fingerprint`, `token`, `login_time`)
+                        VALUES (?, ?, ?, ?, ?, now())";
+                        $bind = $conn -> prepare($sql_query);
+                        $bind -> bind_param("sssss", $userCred->id, $ip, $browser, $fingerprint, $token);
+                        if ($bind -> execute()) {
+
+                            // Once authenticated.. Sets the session variables
+                            Session::set("username", $userCred->user);
+                            Session::set("id", $userCred->id);
+                            Session::set("session_token", $token);
+                            Session::set("fingerprint", $fingerprint);
+                            $conn = Database::closeConnection();
+                            return 4;
         
+                        } else {
+                            echo "Session not set";
+                        }
+
+                    } else {
+                        return 3; //email and password mismatch
+                    }
+                
+                } else {
+                    return 3; //email and password mismatch
+                }
+            
+            } else {
+                return 2; //Email doesn't exists
             }
+        
+        } else {
+
         }
 
     }
@@ -77,17 +91,15 @@ class Auth
     {
         try {
             $session = new Auth($token);
-            // echo "class created";
+
+            // If session gets validated returns the username from session
             if($session->validateSession()) {
+                // validateSession returns true
                 Session::$user = Session::get("username");
                 return Session::$user;
             } else {
                 echo "validate session failed \n";
             }
-            
-            
-
-
         } catch (Exception $e) {
             echo "authorization fail \n";
         }
@@ -95,24 +107,21 @@ class Auth
 
     private function validateSession()
     {
+        // Fingerprint JS validation
         if (isset($_COOKIE['fingerprint']) && $this->credential["fingerprint"]) {
             if ($_COOKIE['fingerprint'] == $this->credential["fingerprint"]) {
-                // echo "fingerprint matches \n <br>";
+                
+                // Login time validation (should be less than 1 hr)
                 $login_time = DateTime::createFromFormat('Y-m-d H:i:s', $this->credential['login_time']);
-                // echo $login_time->getTimestamp();
                 if (3600 > time() - $login_time->getTimestamp()) {
-                    // echo time() - $login_time->getTimestamp();
-                    // echo "time is less than 10 min";
+                    
+                    // Validates whether it is same ip
                     if (isset($_SERVER['REMOTE_ADDR']) && isset($this->ip)) {
                         if ($this->ip == $_SERVER['REMOTE_ADDR']) {
-                            // echo "same ip <br>";
+                            
+                            // Validates whether it is from same browser
                             if (isset($_SERVER['HTTP_USER_AGENT']) && isset($this->browser)) {
-                                // echo "browser present <br>";
-                                // echo $this->browser. "<br>";
-                                // echo $_SERVER['HTTP_USER_AGENT']. "<br>";
-                             
                                 if ($this->browser == $_SERVER['HTTP_USER_AGENT']) {
-                                    // echo "same browser";
                                     return true;
                                 } else {
                                     throw new Exception('browser is different');

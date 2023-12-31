@@ -4,11 +4,10 @@
 global $__config_details;
 
 /*
-Store the 'config.json' outside the document root for security purposes.
+Store the 'pixletconfig.json' outside the document root for security purposes.
 */
 $__site_config_path = $_SERVER['DOCUMENT_ROOT'] .'/../project/pixletconf.json';
 
-// echo $__site_config_path;
 // Read the content of the configuration file
 $__config_details = file_get_contents($__site_config_path);
 

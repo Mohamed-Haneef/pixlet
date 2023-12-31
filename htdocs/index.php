@@ -3,19 +3,18 @@ include_once 'src/load.php';
 ?>
 <html>
 <?php Session::renderPage("_head");
-// echo Session::get("username");
-// echo $session_authenticated;
-// var_dump($_SESSION);
 
+// Logout instruction - removing session and reloading the page
 if((array_key_exists('logout', $_POST))) {
 
     Session::unset();
     Session::destroy();
     unset($_COOKIE['fingerprint']);
-    ?><script>
+    ?>
+<script>
 	console.log("logout")
-</script><?php
-    // var_dump($_SESSION);
+</script>
+<?php
     header('Location: /');
 }
 
@@ -24,6 +23,8 @@ if((array_key_exists('logout', $_POST))) {
 
 
 <body>
+
+	<!-- Checking whether the given session is an authorized one -->
 	<?php
 if(isset($session_authenticated) && null !== Session::get("username")) {
     if($session_authenticated == Session::get("username")) {
@@ -87,9 +88,9 @@ if(isset($session_authenticated) && null !== Session::get("username")) {
 			</div>
 
 			<?php }
-         
-		} else {
-		    ?>
+		//  If not authorized session make them to login or signup again
+} else {
+    ?>
 
 			<div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1"
 				role="dialog" id="modalSheet">
@@ -109,7 +110,7 @@ if(isset($session_authenticated) && null !== Session::get("username")) {
 					</div>
 				</div>
 				<?php
-		}
+}
 ?>
 
 
