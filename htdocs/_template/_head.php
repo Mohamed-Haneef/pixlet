@@ -6,6 +6,7 @@
 	<title>Pixlet</title>
 
 	<link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
 
 
 
@@ -90,38 +91,13 @@
 		.bd-mode-toggle .dropdown-menu .active .bi {
 			display: block !important;
 		}
-
-		body {
-			height: 100%;
-		}
-
-		.form-login {
-			max-width: 330px;
-			padding: 1rem;
-		}
-
-		.form-login .form-floating:focus-within {
-			z-index: 2;
-		}
-
-		.form-login input[name="userName"] {
-			margin-bottom: -1px;
-			border-bottom-right-radius: 0;
-			border-bottom-left-radius: 0;
-		}
-
-		.form-login input[name="password"] {
-			margin-bottom: 10px;
-			border-top-left-radius: 0;
-			border-top-right-radius: 0;
-		}
 	</style>
 
 
 	<!-- Custom styles for this template -->
 	<link href="src/css/master.css" rel="stylesheet">
 	<!-- Implementing fingerprintjs -->
-
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script>
 		const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
 			.then(FingerprintJS => FingerprintJS.load())

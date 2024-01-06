@@ -44,8 +44,32 @@ class Session
         }
     }
     //static function for rendering pages
-    public static function renderPage($pagename)
+    public static function renderPage($pagename, $data = [])
     {
-        include $_SERVER["DOCUMENT_ROOT"]."/_template/$pagename.php";
+        extract($data);
+        $page = $_SERVER["DOCUMENT_ROOT"]."/_template/$pagename.php";
+        if(is_file($page)) {
+            include $page;
+        } else {
+            Session::renderPage("_error");
+            exit();
+        }
+    }
+    public static function loadMaster($token)
+    {
+        Session::renderPage('_master', ["authenticated_token"=>$token]);
+    }
+
+    public static function isauthorized($token)
+    {
+        if(isset($token) && null !== Session::get("session_token")) {
+            if($token == Session::get("session_token")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

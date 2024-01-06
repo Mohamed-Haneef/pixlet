@@ -64,8 +64,8 @@ if ($validation) {
 	<main class="form-signin w-100 m-auto">
 		<form method="post" action="/signup.php">
 			<img src="src/img/pixlet_logo.png" alt="Pixlet" width="70" height="70" style="margin-left: 30%;">
-			<h1 class="h3 mb-3 fw-normal"> Welcome to world of <span class="text-info"
-					style="margin-left: 30%">PIXLET</span></h1>
+			<h1 class="h3 mb-3 fw-normal text-white welcome-font"> Welcome to world of <span
+					class="text-info welcome-font-logo" style="margin-left: 17%">PIXLET</span></h1>
 
 			<div class="form-floating mt-5">
 				<input type="text" class="form-control" id="floatingInput" placeholder="Username" name="userName">

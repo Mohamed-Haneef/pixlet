@@ -95,7 +95,7 @@ class Auth
             // If session gets validated returns the username from session
             if($session->validateSession()) {
                 // validateSession returns true
-                Session::$user = Session::get("username");
+                Session::$user = Session::get("session_token");
                 return Session::$user;
             } else {
                 echo "validate session failed \n";

@@ -1,5 +1,5 @@
 <?php
-include 'Database.class.php';
+// include 'Database.class.php';
 class User
 {
     public $id;

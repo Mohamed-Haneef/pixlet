@@ -8,4 +8,4 @@ function autoLoad($className)
 }
 
 $WebAPI = new WebAPI();
-$session_authenticated = $WebAPI->initiatesession();
+$token_authenticated = $WebAPI->initiatesession();
