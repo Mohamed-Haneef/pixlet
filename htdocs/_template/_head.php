@@ -96,6 +96,11 @@
 
 	<!-- Custom styles for this template -->
 	<link href="src/css/master.css" rel="stylesheet">
+	<!-- Masonry -->
+
+	<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+		integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+		async></script>
 	<!-- Implementing fingerprintjs -->
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 	<script>

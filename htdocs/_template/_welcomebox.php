@@ -1,19 +1,28 @@
 <?php $userName = Session::get("username"); ?>
 
 <div class="container">
-    <div class="row">
-        <?php
+	<div class="row">
+		<div class="row d-flex justify-content-center my-5">
+			<img src="src/img/pixlet_logo.png" alt="" class="rounded-circle main-logo">
+		</div>
+		<div class="row d-flex my-5">
+			<?php
         if($userName != null) { ?>
-        <h1 class="text-info">Hello, <?php echo $userName?> </h1>
-        <?php
+			<h1 class="text-info">Welcome, <?php echo $userName?>
+			</h1>
+			<p class="inline-text">It's been a while.. Share your recent beautiful memories with us.</p>
+			<a href="" class="btn blue-bg">Upload photo</a>
+			<?php
         } else { ?>
-        <h1 class="text-info">Hello, User </h1><br>
-        <p class="text-white">If you are new here, Kindly signup. If you are already a member, Please Login</p>
-        <?php }
+			<h1 class="text-info">Hello, User </h1><br>
+			<p class="inline-text">If you are new here, Kindly signup. If you are already a member, Please Login</p>
+			<?php }
         ?>
-    </div>
-    <div class="row d-flex justify-content-center">
-        <img src="src/img/pixlet_logo.png" alt="" class="w-25 main-logo">
-    </div>
+
+
+		</div>
+
+	</div>
+
 
 </div>
